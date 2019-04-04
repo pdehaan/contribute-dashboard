@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // Firefox Monitor Dashboard
 
 // - Show list of locales w/ 80%+ translations
