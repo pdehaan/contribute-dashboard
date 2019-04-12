@@ -1,4 +1,5 @@
 const axios = require("axios");
+const gitDeployed = require("git-deployed");
 
 const formatters = require("./formatters");
 
@@ -24,11 +25,8 @@ async function getContributeJson(baseUrl) {
 }
 
 async function getGitSha(repoUrl, sha) {
-  const ownerRepo = getOwnerRepo(repoUrl);
-  return getUrl(
-    `/repos/${ownerRepo}/commits/${sha}`,
-    "https://api.github.com/"
-  );
+  const [owner, repo] = getOwnerRepo(repoUrl).split("/");
+  return gitDeployed.getCommitInfo(owner, repo, sha);
 }
 
 async function getVersionJson(baseUrl) {
@@ -54,9 +52,9 @@ async function getEnvData(site) {
 
       item.commit = {
         sha: version.commit,
-        date: commit.commit.author.date,
-        author: (commit.author && commit.author.login) || commit.committer.login,
-        message: commit.commit.message,
+        date: commit.author.date,
+        author: commit.author.name,
+        message: commit.message,
         compareUrl
       };
     } catch (err) {

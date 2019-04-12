@@ -4,10 +4,10 @@ module.exports = {
   shortSha
 };
 
-function shortMessage(message) {
+function shortMessage(message, maxLen = 80) {
   let msg = message.replace(/\s+/g, " ").trim();
-  if (msg.length > 60) {
-    msg = msg.substr(0, 60).trim() + "...";
+  if (msg.length > maxLen) {
+    msg = msg.substr(0, maxLen - 3).trim() + "...";
   }
   return msg;
 }

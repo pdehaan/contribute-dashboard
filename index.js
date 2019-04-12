@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 
-// Firefox Monitor Dashboard
-
-// - Show list of locales w/ 80%+ translations
-// - Show 5 most recent breaches
-// - Show DataClasses breach stats
-// - Show links to various tools (like Puppeteer screenshots)
-// - Links to various sites (dev/stage/prod/gcp)
-
 const formatters = require("./formatters");
 const lib = require("./lib");
 
-main("https://monitor.firefox.com");
+main("https://monitor.firefox.com")
+  .catch(err => {
+    console.error(err.message);
+    if (err.config.url) {
+      console.error(`  ${err.config.url}`);
+    }
+    process.exitCode = 1;
+  });
 
 async function main(site) {
   const data = await lib.getEnvData(site);
@@ -25,6 +24,6 @@ async function main(site) {
     console.log(
       `[${formatters.shortDate(item.commit.date)}] \t ${item.commit.author}: ${formatters.shortMessage(item.commit.message)}`
     );
-    console.log(`\t\t ${formatters.shortSha(item.commit.sha)} \t ${item.commit.compareUrl}\n`);
+    console.log(`\t\t ${item.commit.compareUrl}\n`);
   });
 }
